@@ -1,9 +1,32 @@
 {
-  "name": "SellCourses",
-  "version": "0.0.0",
-  "description": "SellCourses by xuan hinh - hellocacbantrez@gmail.com",
-  "main": "app.js",
-  "repository": "git remote add origin https://github.com/hinh3010/SellCourses-node-react.git",
-  "author": "hinh3010 <100217369+hinh3010@users.noreply.github.com>",
-  "license": "MIT"
+    "name": "sellcourses",
+    "version": "0.0.0",
+    "description": "SellCourses by xuan hinh - hellocacbantrez@gmail.com",
+    "main": "app.js",
+    "repository": "git remote add origin https://github.com/hinh3010/SellCourses-node-react.git",
+    "author": "hinh3010 <100217369+hinh3010@users.noreply.github.com>",
+    "scripts": {
+        "dev": "nodemon --exec babel-node src/app.js",
+        "start": "nodemon  --exec babel-node src/app.js"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "cors": "^2.8.5",
+        "cross-env": "^7.0.3",
+        "dotenv": "^16.0.2",
+        "express": "^4.18.1",
+        "http-errors": "^2.0.0",
+        "joi": "^17.6.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.6.0",
+        "serve-favicon": "^2.5.0",
+        "validator": "^13.7.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.19.0",
+        "@babel/node": "^7.18.10",
+        "@babel/preset-env": "^7.19.0",
+        "nodemon": "^2.0.19"
+    }
 }
