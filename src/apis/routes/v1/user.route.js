@@ -20,15 +20,20 @@ routeUser.post(
             if (isConflict) {
                 throw createError.Conflict(`${email} is already`)
             }
-            const isCreate = await User.create({
+            // const newUser = await User.create({
+            //     email: email,
+            //     displayName: displayName,
+            //     password: password
+            // })
+            const user = new User({
                 email: email,
                 displayName: displayName,
                 password: password
             })
-
+            const newUser = await user.save()
             return res.json({
                 status: 200,
-                data: isCreate
+                data: newUser
             })
         } catch (error) {
             next(error);

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
-
+import bcrypt from 'bcrypt'
 const userSchema = mongoose.Schema(
     {
         displayName: {
@@ -36,6 +36,16 @@ const userSchema = mongoose.Schema(
         timestamps: true,
     }
 )
+
+userSchema.pre('save', async function (next) {
+    try {
+        const hashPassword = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10))
+        this.password = hashPassword
+        next()
+    } catch (error) {
+        next(error);
+    }
+})
 
 const User = mongoose.model('User', userSchema)
 
