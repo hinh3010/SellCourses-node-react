@@ -1,7 +1,7 @@
 import joi from 'joi'
 import patterm from '../pattern/index.pattern.js'
 
-const userValidate = data => {
+const register = data => {
     const userSchema = joi.object({
         email: joi.string().email().lowercase().required().pattern(patterm.email()),
         password: joi.string().min(6).max(33).required(),
@@ -10,4 +10,14 @@ const userValidate = data => {
     return userSchema.validate(data)
 }
 
-export default userValidate
+const login = data => {
+    const userSchema = joi.object({
+        email: joi.string().email().lowercase().required().pattern(patterm.email()),
+        password: joi.string().min(6).max(33).required(),
+    })
+    return userSchema.validate(data)
+}
+
+export default {
+    register, login
+}

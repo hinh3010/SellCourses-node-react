@@ -8,7 +8,7 @@ routeUser.post(
     '/register',
     async (req, res, next) => {
         try {
-            const { error } = validate.user(req.body)
+            const { error } = validate.user.register(req.body)
             if (error) {
                 throw createError(error.details[0].message)
             }
@@ -44,15 +44,36 @@ routeUser.post(
 
 routeUser.post(
     '/login',
-    (req, res, next) => {
-        res.send()
+    async (req, res, next) => {
+        try {
+            const { error } = validate.user.login(req.body)
+            if (error) {
+                throw createError(error.details[0].message)
+            }
+            const { email, password } = req.body
+            const user = await User.findOne({ email: email })
+            if (!user) {
+                throw createError.NotFound('User not registed')
+            }
+            const isValidPassword = await user.isCheckPassword(password)
+            if (!isValidPassword) {
+                throw createError.Unauthorized()
+            }
+
+            return res.json({
+                status: 200,
+                data: user
+            })
+        } catch (error) {
+            next(error);
+        }
     }
 )
 
 
 routeUser.post(
     '/logout',
-    (req, res, next) => {
+    async (req, res, next) => {
         res.send()
     }
 )
@@ -60,7 +81,7 @@ routeUser.post(
 
 routeUser.post(
     '/refresh-token',
-    (req, res, next) => {
+    async (req, res, next) => {
         res.send()
     }
 )
