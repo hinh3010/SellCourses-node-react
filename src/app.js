@@ -9,12 +9,14 @@ import redisClient from './connect/connect_redis.js'
 
 const app = express()
 appLoader(app)
+
 redisClient.set('framework', 'ReactJS', function (err, reply) {
-    console.log(reply); // OK
+    console.log(reply);
 });
 redisClient.get('framework', function (err, reply) {
-    console.log(reply); // ReactJS
+    console.log(reply);
 });
+
 app.get('/', async (req, res) => {
     const setKey = await redisClient.set('token', 'con me no')
     console.log({ setKey })

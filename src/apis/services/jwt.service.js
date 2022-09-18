@@ -2,19 +2,19 @@ import jwt from 'jsonwebtoken'
 import env from './../../env/index.js';
 import createError from 'http-errors';
 
-const accessSerret = env.jwt.access_token_serret
-const accessExpires = env.jwt.access_expiresIn
-const refreshSerret = env.jwt.refresh_token_serret
-const refreshExpires = env.jwt.refresh_expiresIn
+const {
+    access_token_serret, access_expiresIn,
+    refresh_token_serret, refresh_expiresIn,
+} = env.jwt
 
 const signAccessToken = async (userId) => {
     return new Promise((resolve, reject) => {
         const payload = {
             userId
         }
-        const serret = accessSerret
+        const serret = access_token_serret
         const options = {
-            expiresIn: accessExpires
+            expiresIn: access_expiresIn
         }
         jwt.sign(payload, serret, options, (err, token) => {
             if (err) reject(err)
@@ -32,11 +32,13 @@ const verifyAccessToken = async (req, res, next) => {
     if (!token) {
         return next(createError.Unauthorized())
     }
-    jwt.verify(token, accessSerret, (err, payload) => {
+    jwt.verify(token, access_token_serret, (err, payload) => {
         if (err) {
-            return next(createError.Unauthorized())
+            if (err.name === 'JsonWebTokenError') {
+                return next(createError.Unauthorized())
+            }
+            return next(createError.Unauthorized(err.message))
         }
-        console.log(payload)
         req.payload = payload
         next()
     })
@@ -48,9 +50,9 @@ const signRefreshToken = async (userId) => {
         const payload = {
             userId
         }
-        const serret = refreshSerret
+        const serret = refresh_token_serret
         const options = {
-            expiresIn: refreshExpires
+            expiresIn: refresh_expiresIn
         }
         jwt.sign(payload, serret, options, (err, token) => {
             if (err) reject(err)
@@ -59,9 +61,21 @@ const signRefreshToken = async (userId) => {
     })
 }
 
+const verifyRefreshToken = async (refreshToken) => {
+    return new Promise((resolve, reject) => {
+        if (!refreshToken) {
+            return next(createError.BadRequest())
+        }
+        jwt.verify(refreshToken, refresh_token_serret, (err, payload) => {
+            if (err) reject(err)
+            resolve(payload)
+        })
+    })
+}
 
 export default {
     signAccessToken,
     verifyAccessToken,
-    signRefreshToken
+    signRefreshToken,
+    verifyRefreshToken
 }

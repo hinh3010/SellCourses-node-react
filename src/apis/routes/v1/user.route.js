@@ -5,11 +5,18 @@ import service from '../../services/index.service.js';
 import validate from '../../validations/index.validation.js'
 const routeUser = express.Router({ mergeParams: true });
 
+const {
+    verifyAccessToken, signRefreshToken,
+    verifyRefreshToken, signAccessToken
+} = service.jwt
+
+const { login, register } = validate.user
+
 routeUser.post(
     '/register',
     async (req, res, next) => {
         try {
-            const { error } = validate.user.register(req.body)
+            const { error } = register(req.body)
             if (error) {
                 throw createError(error.details[0].message)
             }
@@ -47,7 +54,7 @@ routeUser.post(
     '/login',
     async (req, res, next) => {
         try {
-            const { error } = validate.user.login(req.body)
+            const { error } = login(req.body)
             if (error) {
                 throw createError(error.details[0].message)
             }
@@ -61,8 +68,8 @@ routeUser.post(
                 throw createError.Unauthorized()
             }
 
-            const token = await service.jwt.signAccessToken(user._id)
-            const refreshToken = await service.jwt.signRefreshToken(user._id)
+            const token = await signAccessToken(user._id)
+            const refreshToken = await signRefreshToken(user._id)
             return res.json({
                 status: 200,
                 data: {
@@ -81,7 +88,11 @@ routeUser.post(
 routeUser.post(
     '/logout',
     async (req, res, next) => {
-        res.send()
+        try {
+            console.log(req.body)
+        } catch (error) {
+            next(error);
+        }
     }
 )
 
@@ -89,13 +100,21 @@ routeUser.post(
 routeUser.post(
     '/refresh-token',
     async (req, res, next) => {
-        res.send()
+        try {
+            console.log(req.body)
+            const { refreshToken } = req.body
+            if (!refreshToken) throw createError.BadRequest()
+            const payload = await verifyRefreshToken(refreshToken)
+            console.log(payload)
+        } catch (error) {
+            next(error);
+        }
     }
 )
 
 routeUser.get(
     '/',
-    service.jwt.verifyAccessToken,
+    verifyAccessToken,
     async (req, res, next) => {
         const listUser = [
             { id: 'as', name: 'adu' },
