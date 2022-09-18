@@ -2,7 +2,8 @@ import jwt from 'jsonwebtoken'
 import env from './../../env/index.js';
 import createError from 'http-errors';
 import redis from '../../redis/index';
-
+import Logger from '../../logger/index.js';
+const log = new Logger(__filename)
 const {
     access_token_serret, access_expiresIn, access_expires,
     refresh_token_serret, refresh_expiresIn, refresh_expires
@@ -57,20 +58,32 @@ const signRefreshToken = async (userId) => {
         }
         jwt.sign(payload, serret, options, async (err, refreshToken) => {
             if (err) reject(err)
-            const adu = await redis.setWithExpire(userId, refreshToken, refresh_expires)
+            // log.info(`getRefreshToken`)
+            // const adu = await redis.setWithExpire(userId, refreshToken, refresh_expires)
+            // console.log(adu, refresh_expires)
+            await redis.setWithExpire(userId, refreshToken, refresh_expires)
             resolve(refreshToken)
         })
     })
 }
 
+
 const verifyRefreshToken = async (refreshToken) => {
     return new Promise((resolve, reject) => {
         if (!refreshToken) {
-            return next(createError.BadRequest())
+            return reject(createError.BadRequest())
         }
-        jwt.verify(refreshToken, refresh_token_serret, (err, payload) => {
-            if (err) reject(err)
-            resolve(payload)
+        jwt.verify(refreshToken, refresh_token_serret, async (err, payload) => {
+            if (payload) {
+                const getRefreshToken = await redis.get(payload.userId)
+                // if (getRefreshToken === refreshToken) {
+                if (getRefreshToken) {
+                    return resolve(payload)
+                }
+                return reject(createError.Unauthorized())
+            } else {
+                return reject(err)
+            }
         })
     })
 }

@@ -7,7 +7,7 @@ const default_expire = 300; //5 minutes
 const formatKey = (key) => {
     let _key = key
     if (typeof key !== 'string') {
-        _key.tosTring()
+        _key.toString()
     }
     return project_name + '_' + node_env + '_' + _key;
 }
@@ -24,7 +24,7 @@ const setWithExpire = async (key, value, expire = default_expire) => {
     const redisKey = formatKey(key)
     return redisClient.set(redisKey, value, {
         EX: expire,
-        NX: true
+        // NX: true
     });
 };
 

@@ -16,10 +16,10 @@ const env = {
     jwt: {
         access_token_serret: 'HelloCacBanTre',
         access_expiresIn: access_expires.toString() + 's',
-        access_expires,
+        access_expires: Number(access_expires),
         refresh_token_serret: 'BatNgoChuaBaGia',
         refresh_expiresIn: refresh_expires.toString() + 's',
-        refresh_expires
+        refresh_expires: Number(refresh_expires)
     }
 
 }

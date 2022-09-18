@@ -1,14 +1,15 @@
 import express from 'express'
 import routeV1 from './apis/routes/v1/index.route.js'
-import './connect/connect_mongodb.js'
-import redisClient from './connect/connect_redis.js'
+import mongooseDbConnect from './connect/connect_mongodb.js'
+import redisClient, { redisDbConnect } from './connect/connect_redis.js'
 import env from './env/index.js'
 import appLoader from './loader/app.loader.js'
 
 
 const app = express()
 appLoader(app)
-
+mongooseDbConnect()
+redisDbConnect()
 
 
 app.get('/', async (req, res) => {
