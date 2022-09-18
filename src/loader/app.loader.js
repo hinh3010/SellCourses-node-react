@@ -1,6 +1,7 @@
+import cors from 'cors'
 import express from 'express'
 import path from 'path'
-import cors from 'cors'
+
 const appLoader = (app) => {
     app.use(express.static(path.join(__dirname, '..', 'public'), { maxAge: 31557600000 }))
     app.use(express.json({ limit: '30mb' }));

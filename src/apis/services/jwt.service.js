@@ -1,10 +1,11 @@
 import jwt from 'jsonwebtoken'
 import env from './../../env/index.js';
 import createError from 'http-errors';
+import redis from '../../redis/index';
 
 const {
-    access_token_serret, access_expiresIn,
-    refresh_token_serret, refresh_expiresIn,
+    access_token_serret, access_expiresIn, access_expires,
+    refresh_token_serret, refresh_expiresIn, refresh_expires
 } = env.jwt
 
 const signAccessToken = async (userId) => {
@@ -54,9 +55,10 @@ const signRefreshToken = async (userId) => {
         const options = {
             expiresIn: refresh_expiresIn
         }
-        jwt.sign(payload, serret, options, (err, token) => {
+        jwt.sign(payload, serret, options, async (err, refreshToken) => {
             if (err) reject(err)
-            resolve(token)
+            const adu = await redis.setWithExpire(userId, refreshToken, refresh_expires)
+            resolve(refreshToken)
         })
     })
 }

@@ -101,11 +101,13 @@ routeUser.post(
     '/refresh-token',
     async (req, res, next) => {
         try {
-            console.log(req.body)
-            const { refreshToken } = req.body
-            if (!refreshToken) throw createError.BadRequest()
-            const payload = await verifyRefreshToken(refreshToken)
-            console.log(payload)
+            if (!req.body.refreshToken) throw createError.BadRequest()
+            const { userId } = await verifyRefreshToken(req.body.refreshToken)
+            const token = await signAccessToken(userId)
+            const refreshToken = await signRefreshToken(userId)
+            return res.json({
+                token, refreshToken
+            })
         } catch (error) {
             next(error);
         }

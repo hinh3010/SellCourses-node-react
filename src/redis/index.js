@@ -1,48 +1,62 @@
-import { redisClient } from "../app";
+import redisClient from '../connect/connect_redis.js';
+import env from '../env/index.js'
 
-const PROJECT_NAME = process.env.PROJECT_NAME || 'ALO389';
-const NODE_ENV = process.env.NODE_ENV || 'developer';
-const DEFAULT_EXPIRE = 300; //5 minutes
+const { project_name, node_env } = env
+const default_expire = 300; //5 minutes
 
-const setJsonWithExpire = async (key, value, expire = DEFAULT_EXPIRE) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
-    return redisClient.set(redisKey, JSON.stringify(value), 'ex', expire);
+const formatKey = (key) => {
+    let _key = key
+    if (typeof key !== 'string') {
+        _key.tosTring()
+    }
+    return project_name + '_' + node_env + '_' + _key;
+}
+
+const setJsonWithExpire = async (key, value, expire = default_expire) => {
+    const redisKey = formatKey(key)
+    return redisClient.set(redisKey, JSON.stringify(value), {
+        EX: expire,
+        NX: true
+    });
 };
 
-const setWithExpire = async (key, value, expire = DEFAULT_EXPIRE) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
-    return redisClient.set(redisKey, value, 'ex', expire);
+const setWithExpire = async (key, value, expire = default_expire) => {
+    const redisKey = formatKey(key)
+    return redisClient.set(redisKey, value, {
+        EX: expire,
+        NX: true
+    });
 };
 
 const setJsonNoExpire = async (key, value) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     return redisClient.set(redisKey, JSON.stringify(value));
 };
 
 const setNoExpire = async (key, value) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     return redisClient.set(redisKey, value);
 };
 
 const getJson = async (key) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     const data = await redisClient.get(redisKey);
     return JSON.parse(data);
 };
 
 const get = async (key) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     return redisClient.get(redisKey);
 };
 
 const del = async (key) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     return redisClient.del(redisKey)
 };
 
 // Key: sample_pattern:*
 const deleteMultipKey = async (key) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     redisClient.keys(redisKey).then((keys) => {
         const pipeline = redisClient.pipeline();
         keys.forEach(function (key) {
@@ -53,11 +67,11 @@ const deleteMultipKey = async (key) => {
 }
 
 const increment = async (key, incre = 1) => {
-    const redisKey = PROJECT_NAME + '_' + NODE_ENV + '_' + key;
+    const redisKey = formatKey(key)
     return redisClient.incrby(redisKey, incre)
 }
 
-export const redis = {
+const redis = {
     setJsonWithExpire,
     setWithExpire,
     setJsonNoExpire,
@@ -69,6 +83,4 @@ export const redis = {
     increment,
 };
 
-
-const Redis = require('ioredis');
-export const redisClient = new Redis();
+export default redis
