@@ -1,7 +1,7 @@
 import createError from 'http-errors';
 import service from '../services/index.service.js';
 import validate from '../validations/index.validation.js'
-import User from '../models/user.model.js';
+import User from '../models/User.model.js';
 import redis from '../../redis/index.js';
 
 const {
@@ -44,7 +44,7 @@ const sigup = async (req, res, next) => {
     }
 }
 
-const sign = async (req, res, next) => {
+const signIn = async (req, res, next) => {
     try {
         const { error } = login(req.body)
         if (error) {
@@ -60,6 +60,24 @@ const sign = async (req, res, next) => {
             throw createError.Unauthorized()
         }
 
+        const token = await signAccessToken(user._id)
+        const refreshToken = await signRefreshToken(user._id)
+        return res.json({
+            status: 200,
+            data: {
+                token,
+                refreshToken,
+                user
+            }
+        })
+    } catch (error) {
+        next(error);
+    }
+}
+
+const signInPassportLocal = async (req, res, next) => {
+    try {
+        const { user } = req
         const token = await signAccessToken(user._id)
         const refreshToken = await signRefreshToken(user._id)
         return res.json({
@@ -115,6 +133,26 @@ const refreshToken = async (req, res, next) => {
     }
 }
 
+
+const authGoogle = async (req, res, next) => {
+    // Assign a token
+    const user = req.user
+    const token = await signAccessToken(user._id)
+    const refreshToken = await signRefreshToken(user._id)
+
+    // res.setHeader('Authorization', token)
+    console.log({ token, refreshToken })
+    return res.json({
+        status: 200,
+        data: {
+            token,
+            refreshToken,
+            user
+        }
+    })
+}
+
 export default {
-    sigup, sign, logout, refreshToken
+    sigup, signIn, logout, refreshToken,
+    signInPassportLocal, authGoogle
 }

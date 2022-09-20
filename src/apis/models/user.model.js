@@ -3,33 +3,54 @@ const validator = require('validator')
 import bcrypt from 'bcrypt'
 const userSchema = mongoose.Schema(
     {
+        firstName: {
+            type: String,
+            trim: true,
+        },
+        lastName: {
+            type: String,
+            trim: true,
+        },
         displayName: {
             type: String,
             trim: true,
         },
         email: {
             type: String,
-            required: true,
             unique: true,
             trim: true,
             lowercase: true,
-            validate(value) {
-                if (!validator.isEmail(value)) {
-                    throw new Error('Invalid email')
-                }
-            },
+            // required: true,
+            // validate(value) {
+            //     if (!validator.isEmail(value)) {
+            //         throw new Error('Invalid email')
+            //     }
+            // },
         },
         password: {
             type: String,
-            required: true,
             trim: true,
-            minlength: 6,
-            validate(value) {
-                if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
-                    throw new Error('Password must contain at least one letter and one number')
-                }
-            },
-            private: true,
+            // required: true,
+            // minlength: 6,
+            // validate(value) {
+            //     if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
+            //         throw new Error('Password must contain at least one letter and one number')
+            //     }
+            // },
+            // private: true,
+        },
+        authGoogleID: {
+            type: String,
+            default: null
+        },
+        authFacebookID: {
+            type: String,
+            default: null
+        },
+        authType: {
+            type: String,
+            enum: ['local', 'google', 'facebook'],
+            default: 'local'
         },
     },
     {
@@ -37,8 +58,9 @@ const userSchema = mongoose.Schema(
     }
 )
 
-userSchema.pre('save', async function (next) {
+userSchema.pre('save', function (next) {
     try {
+        if (this.authType !== 'local') next()
         const hashPassword = bcrypt.hashSync(this.password, bcrypt.genSaltSync(10))
         this.password = hashPassword
         next()

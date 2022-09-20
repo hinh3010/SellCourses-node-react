@@ -1,8 +1,5 @@
 import mongoose from "mongoose";
 import env from "../env";
-import Logger from '../logger/index.js';
-
-const log = new Logger(__filename)
 
 const mongooseDbConnect = async () => {
     try {
@@ -13,7 +10,7 @@ const mongooseDbConnect = async () => {
         })
         console.log('MongoDb::: connected!!')
     } catch (error) {
-        log.error(`MongoDB::: Failed to connect!! - ${error.message}`)
+        console.log(`MongoDB::: Failed to connect!! - ${error.message}`)
         throw new Error(`MongoDB::: Failed to connect!!`)
     }
 }

@@ -20,6 +20,16 @@ const env = {
         refresh_token_serret: 'BatNgoChuaBaGia',
         refresh_expiresIn: refresh_expires.toString() + 's',
         refresh_expires: Number(refresh_expires)
+    },
+    auth: {
+        google: {
+            CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+            CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET
+        },
+        facebook: {
+            CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+            CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET
+        }
     }
 
 }
