@@ -1,7 +1,7 @@
 
-import userController from './user.controller.js';
+import authController from './auth.controller.js';
 const controller = {
-    user: userController
+    auth: authController
 }
 
 export default controller

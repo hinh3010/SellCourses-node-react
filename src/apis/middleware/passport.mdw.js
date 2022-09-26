@@ -11,7 +11,7 @@ const GooglePlusTokenStrategy = require("passport-google-plus-token");
 const FacebookTokenStrategy = require('passport-facebook-token');
 
 const { access_token_serret } = env.jwt
-const { google } = env.auth
+const { google, facebook } = env.auth
 
 
 // Passport Jwt
@@ -77,41 +77,45 @@ passport.use(
 );
 
 // // Passport Facebook
-// passport.use(
-//     new FacebookTokenStrategy(
-//         {
-//             clientID: auth.facebook.CLIENT_ID,
-//             clientSecret: auth.facebook.CLIENT_SECRET,
-//         },
-//         async (accessToken, refreshToken, profile, done) => {
-//             try {
-//                 // check whether this current user exists in our database
-//                 const user = await User.findOne({
-//                     authFacebookID: profile.id,
-//                     authType: "google",
-//                 });
+passport.use(
+    new FacebookTokenStrategy(
+        {
+            clientID: facebook.CLIENT_ID,
+            clientSecret: facebook.CLIENT_SECRET,
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                // console.log({ accessToken })
+                // console.log({ refreshToken })
+                console.log({ profile, email: profile.emails[0].value, photo: profile.photos[0].value })
 
-//                 if (user) return done(null, user)
+                // kiểm tra xem người dùng hiện tại này có tồn tại trong cơ sở dữ liệu hay không
+                const user = await User.findOne({
+                    authFacebookID: profile.id,
+                    authType: "facebook",
+                });
 
-//                 // If new account
-//                 const newUser = new User({
-//                     authType: 'facebook',
-//                     authFacebookID: profile.id,
-//                     email: profile.emails[0].value,
-//                     firstName: profile.name.givenName,
-//                     lastName: profile.name.familyName
-//                 })
+                if (user) return done(null, user)
 
-//                 await newUser.save()
+                // If new account
+                const newUser = new User({
+                    authType: 'facebook',
+                    authFacebookID: profile.id,
+                    email: profile.emails[0].value,
+                    firstName: profile.name.givenName,
+                    lastName: profile.name.familyName
+                })
 
-//                 done(null, newUser)
-//             } catch (error) {
-//                 console.log('error ', error)
-//                 done(error, false);
-//             }
-//         }
-//     )
-// );
+                await newUser.save()
+
+                done(null, newUser)
+            } catch (error) {
+                console.log('error ', error)
+                done(error, false);
+            }
+        }
+    )
+);
 
 // Passport local
 passport.use(

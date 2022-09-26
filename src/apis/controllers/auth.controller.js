@@ -1,9 +1,8 @@
 import createError from 'http-errors';
 import service from '../services/index.service.js';
-import validate from '../validations/index.validation.js'
 import User from '../models/User.model.js';
 import redis from '../../redis/index.js';
-
+import validate from '../middleware/validations/index.validation'
 const {
     verifyAccessToken, signRefreshToken,
     verifyRefreshToken, signAccessToken
@@ -141,7 +140,25 @@ const authGoogle = async (req, res, next) => {
     const refreshToken = await signRefreshToken(user._id)
 
     // res.setHeader('Authorization', token)
-    console.log({ token, refreshToken })
+    // console.log({ token, refreshToken })
+    return res.json({
+        status: 200,
+        data: {
+            token,
+            refreshToken,
+            user
+        }
+    })
+}
+
+const authFacebook = async (req, res, next) => {
+    // Assign a token
+    const user = req.user
+    const token = await signAccessToken(user._id)
+    const refreshToken = await signRefreshToken(user._id)
+
+    // res.setHeader('Authorization', token)
+    // console.log({ token, refreshToken })
     return res.json({
         status: 200,
         data: {
@@ -154,5 +171,5 @@ const authGoogle = async (req, res, next) => {
 
 export default {
     sigup, signIn, logout, refreshToken,
-    signInPassportLocal, authGoogle
+    signInPassportLocal, authGoogle, authFacebook
 }

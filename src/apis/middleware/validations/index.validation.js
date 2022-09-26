@@ -1,7 +1,7 @@
 import userValidate from "./user.validation.js"
 
 const validate = {
-    user: userValidate
+    user: userValidate,
 }
 
 export default validate

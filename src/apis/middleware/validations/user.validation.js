@@ -1,5 +1,5 @@
 import joi from 'joi'
-import patterm from '../pattern/index.pattern.js'
+import patterm from '../../pattern/index.pattern.js'
 
 const register = data => {
     const userSchema = joi.object({
