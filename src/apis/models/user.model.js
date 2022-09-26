@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const validator = require('validator')
 import bcrypt from 'bcrypt'
+import { paginatePlugin } from './plugins/index.plugin'
 const userSchema = mongoose.Schema(
     {
         firstName: {
@@ -77,6 +78,7 @@ userSchema.methods.isCheckPassword = function (password) {
     }
 }
 
+userSchema.plugin(paginatePlugin);
 const User = mongoose.model('User', userSchema)
 
 export default User
