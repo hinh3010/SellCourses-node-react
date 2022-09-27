@@ -1,5 +1,5 @@
 const passport = require("passport");
-import env from '../../env/index.js';
+import env from '../../config/env.config.js';
 import User from '../models/User.model.js';
 
 const JwtStrategy = require("passport-jwt").Strategy;

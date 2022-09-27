@@ -1,8 +1,8 @@
 import express from 'express'
 import routeV1 from './apis/routes/v1/index.route.js'
+import env from './config/env.config.js'
 import mongooseDbConnect from './connect/connect_mongodb.js'
 import redisClient, { redisDbConnect } from './connect/connect_redis.js'
-import env from './env/index.js'
 import appLoader from './loader/app.loader.js'
 
 

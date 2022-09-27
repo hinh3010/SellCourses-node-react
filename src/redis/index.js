@@ -1,5 +1,5 @@
+import env from '../config/env.config.js';
 import redisClient from '../connect/connect_redis.js';
-import env from '../env/index.js'
 
 const { project_name, node_env } = env
 const default_expire = 300; //5 minutes
