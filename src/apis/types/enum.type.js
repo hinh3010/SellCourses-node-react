@@ -18,9 +18,18 @@ const AUTH_TYPE = [
     constType.GOOGLE
 ]
 
+const TOKEN_TYPE = [
+    constType.ACCESS,
+    constType.REFRESH,
+    constType.RESET_PASSWORD,
+    constType.VERIFY_EMAIL,
+]
+
+
 const enumType = {
     ACCOUNT_TYPE,
     AUTH_TYPE,
-    ACCOUNT_STATUS
+    ACCOUNT_STATUS,
+    TOKEN_TYPE
 }
 export default enumType

@@ -8,6 +8,10 @@ const constType = {
     GOOGLE: 'google',
     ACTIVE: 'ACTIVE',
     INACTIVE: 'INACTIVE',
+    ACCESS: 'access',
+    REFRESH: 'refresh',
+    RESET_PASSWORD: 'resetPassword',
+    VERIFY_EMAIL: 'verifyEmail',
 }
 
 export default constType
