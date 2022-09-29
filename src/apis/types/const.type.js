@@ -1,5 +1,5 @@
 const constType = {
-    SUPER_ADMIN: 'SUPER ADMIN',
+    SUPER_ADMIN: 'SUPER_ADMIN',
     ADMIN: 'ADMIN',
     STUDENT: 'STUDENT',
     MENTOR: 'MENTOR',

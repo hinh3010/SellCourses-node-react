@@ -1,38 +1,32 @@
 import createError from 'http-errors';
-import service from '../services/index.service.js';
-import User from '../models/User.model.js';
 import redis from '../../redis/index.js';
-import validate from '../middleware/validations/index.validation'
+import User from '../models/User.model.js';
+import service from '../services/index.service.js';
+import catchAsync from '../utils/catch-async.js';
 const {
     verifyAccessToken, signRefreshToken,
     verifyRefreshToken, signAccessToken
 } = service.jwt
-const { login, register } = validate.user
 
 const sigup = async (req, res, next) => {
     try {
-        const { error } = register(req.body)
-        if (error) {
-            throw createError(error.details[0].message)
-        }
-        const { displayName, email, password } = req.body
-        if (!email || !password || !displayName) {
-            throw createError.BadRequest()
-        }
+        const {
+            email, password, accountType,
+            firstName, lastName, phone, displayName, ...data
+        } = req.body
+
         const isConflict = await User.findOne({ email: email })
         if (isConflict) {
             throw createError.Conflict(`${email} is already`)
         }
-        // const newUser = await User.create({
-        //     email: email,
-        //     displayName: displayName,
-        //     password: password
-        // })
+
         const user = new User({
-            email: email,
-            displayName: displayName,
-            password: password
+            email, password, accountType,
+            firstName, lastName, phone,
+            displayName: displayName ? displayName : `${firstName} ${lastName}`,
+            ...data
         })
+
         const newUser = await user.save()
         return res.json({
             status: 200,
@@ -43,54 +37,22 @@ const sigup = async (req, res, next) => {
     }
 }
 
-const signIn = async (req, res, next) => {
-    try {
-        const { error } = login(req.body)
-        if (error) {
-            throw createError(error.details[0].message)
-        }
-        const { email, password } = req.body
-        const user = await User.findOne({ email })
-        if (!user) {
-            throw createError.NotFound('User not registed')
-        }
-        const isValidPassword = await user.isCheckPassword(password)
-        if (!isValidPassword) {
-            throw createError.Unauthorized()
-        }
+const signIn = catchAsync(async (req, res) => {
+    const { user } = req
 
-        const token = await signAccessToken(user._id)
-        const refreshToken = await signRefreshToken(user._id)
-        return res.json({
-            status: 200,
-            data: {
-                token,
-                refreshToken,
-                user
-            }
-        })
-    } catch (error) {
-        next(error);
-    }
-}
+    const token = await signAccessToken(user._id)
+    const refreshToken = await signRefreshToken(user._id)
+    return res.json({
+        status: 200,
+        data: {
+            token,
+            refreshToken,
+            user
+        }
+    })
+})
 
-const signInPassportLocal = async (req, res, next) => {
-    try {
-        const { user } = req
-        const token = await signAccessToken(user._id)
-        const refreshToken = await signRefreshToken(user._id)
-        return res.json({
-            status: 200,
-            data: {
-                token,
-                refreshToken,
-                user
-            }
-        })
-    } catch (error) {
-        next(error);
-    }
-}
+
 
 const logout = async (req, res, next) => {
     try {
@@ -171,5 +133,5 @@ const authFacebook = async (req, res, next) => {
 
 export default {
     sigup, signIn, logout, refreshToken,
-    signInPassportLocal, authGoogle, authFacebook
+    authGoogle, authFacebook
 }

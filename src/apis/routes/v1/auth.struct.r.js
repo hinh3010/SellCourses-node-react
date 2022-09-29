@@ -16,31 +16,29 @@ const routeAuth = express.Router({ mergeParams: true });
 
 routeAuth.post(
     '/register',
-    validateBody(schemaValidator.register),
     sigup
 )
 
 routeAuth.post(
-    '/logout',
-    logout
-)
-
-routeAuth.post(
     '/login',
-    validateBody(schemaValidator.login),
-    passport.authenticate('local', { session: false }),
     signIn
 )
 
+routeAuth.post(
+    '/login2',
+    passport.authenticate('local', { session: false }),
+    signInPassportLocal
+)
+
 routeAuth
-    .route('/login/google')
+    .route('/auth/google')
     .post(
         passport.authenticate('google-plus-token', { session: false }),
         authGoogle
     )
 
 routeAuth
-    .route('/login/facebook')
+    .route('/auth/facebook')
     .post(
         passport.authenticate('facebook-token', { session: false }),
         authFacebook
@@ -48,11 +46,15 @@ routeAuth
 
 
 routeAuth.post(
+    '/logout',
+    logout
+)
+
+routeAuth.post(
     '/refresh-token',
     refreshToken
 )
 
-// test
 routeAuth.get(
     '/',
     // service.jwt.verifyAccessToken,                   // verify token

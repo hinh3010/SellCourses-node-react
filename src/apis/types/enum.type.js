@@ -7,6 +7,11 @@ const ACCOUNT_TYPE = [
     constType.SUPER_ADMIN
 ]
 
+const ACCOUNT_TYPE_REGISTER = [
+    constType.MENTOR,
+    constType.STUDENT
+]
+
 const ACCOUNT_STATUS = [
     constType.ACTIVE,
     constType.INACTIVE
@@ -27,7 +32,7 @@ const TOKEN_TYPE = [
 
 
 const enumType = {
-    ACCOUNT_TYPE,
+    ACCOUNT_TYPE, ACCOUNT_TYPE_REGISTER,
     AUTH_TYPE,
     ACCOUNT_STATUS,
     TOKEN_TYPE

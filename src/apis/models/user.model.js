@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema(
         displayName: { type: String, trim: true },
         avatarUrl: { type: String, default: null },
         email: { type: String, unique: true, trim: true, lowercase: true },
-        accountType: { type: [String], enum: enumType.ACCOUNT_TYPE, required: true },
+        accountType: { type: [String], enum: enumType.ACCOUNT_TYPE, default: [constType.STUDENT] },
         password: { type: String, trim: true },
         phone: { type: String, unique: true },
         averageRatings: { type: Number, default: 0 },
@@ -24,8 +24,12 @@ const userSchema = mongoose.Schema(
         // link
         socialLink: {
             type: [
-                { socialType: { type: String, }, socialUrl: { type: String } },
+                {
+                    socialName: { type: String },
+                    socialUrl: { type: String }
+                },
             ],
+            default: null
         },
 
         // status
