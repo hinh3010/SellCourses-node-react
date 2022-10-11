@@ -36,7 +36,7 @@ const userSchema = mongoose.Schema(
         accountStatus: {
             type: String,
             enum: enumType.ACCOUNT_STATUS,
-            default: enumType.ACCOUNT_STATUS.ACTIVE,
+            default: constType.ACTIVE,
         },
 
         // delete

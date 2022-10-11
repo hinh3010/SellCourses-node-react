@@ -35,87 +35,87 @@ passport.use(
     )
 );
 
-// Passport Google
-passport.use(
-    new GooglePlusTokenStrategy(
-        {
-            clientID: google.CLIENT_ID,
-            clientSecret: google.CLIENT_SECRET,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                // console.log({ accessToken })
-                // console.log({ refreshToken })
-                // console.log({ profile, email: profile.emails[0].value, photo: profile.photos[0].value })
+// // Passport Google
+// passport.use(
+//     new GooglePlusTokenStrategy(
+//         {
+//             clientID: google.CLIENT_ID,
+//             clientSecret: google.CLIENT_SECRET,
+//         },
+//         async (accessToken, refreshToken, profile, done) => {
+//             try {
+//                 // console.log({ accessToken })
+//                 // console.log({ refreshToken })
+//                 // console.log({ profile, email: profile.emails[0].value, photo: profile.photos[0].value })
 
-                // kiểm tra xem người dùng hiện tại này có tồn tại trong cơ sở dữ liệu hay không
-                const user = await User.findOne({
-                    authGoogleID: profile.id,
-                    authType: "google",
-                });
+//                 // kiểm tra xem người dùng hiện tại này có tồn tại trong cơ sở dữ liệu hay không
+//                 const user = await User.findOne({
+//                     authGoogleID: profile.id,
+//                     authType: "google",
+//                 });
 
-                if (user) return done(null, user)
+//                 if (user) return done(null, user)
 
-                // Nếu tài khoản mới
-                const newUser = new User({
-                    authType: 'google',
-                    authGoogleID: profile.id,
-                    email: profile.emails[0].value,
-                    firstName: profile.name.givenName,
-                    lastName: profile.name.familyName
-                })
+//                 // Nếu tài khoản mới
+//                 const newUser = new User({
+//                     authType: 'google',
+//                     authGoogleID: profile.id,
+//                     email: profile.emails[0].value,
+//                     firstName: profile.name.givenName,
+//                     lastName: profile.name.familyName
+//                 })
 
-                await newUser.save()
+//                 await newUser.save()
 
-                done(null, newUser)
-            } catch (error) {
-                console.log('error ', error)
-                done(error, false);
-            }
-        }
-    )
-);
+//                 done(null, newUser)
+//             } catch (error) {
+//                 console.log('error ', error)
+//                 done(error, false);
+//             }
+//         }
+//     )
+// );
 
-// // Passport Facebook
-passport.use(
-    new FacebookTokenStrategy(
-        {
-            clientID: facebook.CLIENT_ID,
-            clientSecret: facebook.CLIENT_SECRET,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                // console.log({ accessToken })
-                // console.log({ refreshToken })
-                console.log({ profile, email: profile.emails[0].value, photo: profile.photos[0].value })
+// // // Passport Facebook
+// passport.use(
+//     new FacebookTokenStrategy(
+//         {
+//             clientID: facebook.CLIENT_ID,
+//             clientSecret: facebook.CLIENT_SECRET,
+//         },
+//         async (accessToken, refreshToken, profile, done) => {
+//             try {
+//                 // console.log({ accessToken })
+//                 // console.log({ refreshToken })
+//                 console.log({ profile, email: profile.emails[0].value, photo: profile.photos[0].value })
 
-                // kiểm tra xem người dùng hiện tại này có tồn tại trong cơ sở dữ liệu hay không
-                const user = await User.findOne({
-                    authFacebookID: profile.id,
-                    authType: "facebook",
-                });
+//                 // kiểm tra xem người dùng hiện tại này có tồn tại trong cơ sở dữ liệu hay không
+//                 const user = await User.findOne({
+//                     authFacebookID: profile.id,
+//                     authType: "facebook",
+//                 });
 
-                if (user) return done(null, user)
+//                 if (user) return done(null, user)
 
-                // If new account
-                const newUser = new User({
-                    authType: 'facebook',
-                    authFacebookID: profile.id,
-                    email: profile.emails[0].value,
-                    firstName: profile.name.givenName,
-                    lastName: profile.name.familyName
-                })
+//                 // If new account
+//                 const newUser = new User({
+//                     authType: 'facebook',
+//                     authFacebookID: profile.id,
+//                     email: profile.emails[0].value,
+//                     firstName: profile.name.givenName,
+//                     lastName: profile.name.familyName
+//                 })
 
-                await newUser.save()
+//                 await newUser.save()
 
-                done(null, newUser)
-            } catch (error) {
-                console.log('error ', error)
-                done(error, false);
-            }
-        }
-    )
-);
+//                 done(null, newUser)
+//             } catch (error) {
+//                 console.log('error ', error)
+//                 done(error, false);
+//             }
+//         }
+//     )
+// );
 
 // Passport local
 passport.use(

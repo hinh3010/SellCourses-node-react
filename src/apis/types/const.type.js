@@ -12,6 +12,10 @@ const constType = {
     REFRESH: 'refresh',
     RESET_PASSWORD: 'resetPassword',
     VERIFY_EMAIL: 'verifyEmail',
+
+    DOING: 'DOING',
+    DONE: 'DONE',
+    NOT_STARTED: 'NOT_STARTED',
 }
 
 export default constType
