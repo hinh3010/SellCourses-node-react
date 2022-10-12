@@ -17,9 +17,9 @@ const register = Joi.object({
     password: Joi.string().trim().min(6).max(33).required(),
     firstName: Joi.string().trim().min(2).max(33).required(),
     lastName: Joi.string().trim().min(2).max(33).required(),
+    phone: Joi.string().trim().required(),
     displayName: Joi.string(),
     accountType: Joi.array().items(Joi.string().valid(...Object.values(enumType.ACCOUNT_TYPE_REGISTER))),
-    phone: Joi.string().trim().required()
 })
 
 const login = Joi.object({
@@ -27,11 +27,15 @@ const login = Joi.object({
     password: Joi.string().trim().min(6).max(33).required(),
 })
 
+const refreshToken = Joi.object({
+    refreshToken: Joi.string().trim().required(),
+})
+
 const schemaValidator = {
     idSchema,
     userSchema,
 
-    register, login
+    register, login, refreshToken
 }
 
 export default schemaValidator

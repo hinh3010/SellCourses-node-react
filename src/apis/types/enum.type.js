@@ -1,10 +1,10 @@
 import constType from "./const.type"
 
 const ACCOUNT_TYPE = [
-    constType.ADMIN,
     constType.MENTOR,
     constType.STUDENT,
-    constType.SUPER_ADMIN
+    // constType.ADMIN,
+    // constType.SUPER_ADMIN
 ]
 
 const ACCOUNT_TYPE_REGISTER = [

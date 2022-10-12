@@ -28,6 +28,7 @@ const sigup = async (req, res, next) => {
         })
 
         const newUser = await user.save()
+        delete newUser._doc.password
         return res.json({
             status: 200,
             data: newUser
@@ -42,12 +43,15 @@ const signIn = catchAsync(async (req, res) => {
 
     const token = await signAccessToken(user._id)
     const refreshToken = await signRefreshToken(user._id)
+
+    const { password, ...restOfUser } = user._doc
+
     return res.json({
         status: 200,
         data: {
             token,
             refreshToken,
-            user
+            user: restOfUser
         }
     })
 })

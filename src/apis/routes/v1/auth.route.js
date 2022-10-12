@@ -32,6 +32,12 @@ routeAuth.post(
     signIn
 )
 
+routeAuth.post(
+    '/refreshToken',
+    validateBody(schemaValidator.refreshToken),
+    refreshToken
+)
+
 routeAuth
     .route('/login/google')
     .post(
@@ -47,38 +53,13 @@ routeAuth
     )
 
 
-routeAuth.post(
-    '/refresh-token',
-    refreshToken
-)
+
 
 // test
 routeAuth.get(
-    '/',
+    '/testToken',
     // service.jwt.verifyAccessToken,                   // verify token
     passport.authenticate('jwt', { session: false }),   // verifi passport
-    async (req, res, next) => {
-        res.json({
-            status: 200,
-            data: [
-                { id: 'as', name: 'adu' },
-                { id: 'as', name: 'adu' },
-                { id: 'as', name: 'adu' },
-            ]
-        })
-    }
-)
-
-routeAuth.post(
-    '/',
-    validateBody(schemaValidator.login),
-    async (req, res, next) => {
-        res.json(req.body)
-    }
-)
-routeAuth.get(
-    '/:id',
-    validateParam(schemaValidator.idSchema, 'id'),
     async (req, res, next) => {
         res.json({
             status: 200,

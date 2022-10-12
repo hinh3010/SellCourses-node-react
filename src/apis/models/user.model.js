@@ -32,6 +32,10 @@ const userSchema = mongoose.Schema(
             default: null
         },
 
+        // admin
+        isAdmin: { type: Boolean, default: false },
+        isSuperAdmin: { type: Boolean, default: false },
+
         // status
         accountStatus: {
             type: String,
