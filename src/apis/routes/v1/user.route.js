@@ -8,14 +8,16 @@ const passport = require("passport");
 const { validateBody, validateParam, schemaValidator } = mdw
 
 const {
-    getAll
-} = controller.course
+    getAll,
+    getById, updateById, changeStatusById,
+    deleteById,
+} = controller.user
 
-const routeCourse = express.Router({ mergeParams: true });
+const routeUser = express.Router({ mergeParams: true });
 
 
 
-routeCourse.route('/')
+routeUser.route('/')
     .get(
         passport.authenticate('jwt', { session: false }),
         getAll
@@ -29,31 +31,25 @@ routeCourse.route('/')
         }
     )
 
-routeCourse.route('/:courseId')
+routeUser.route('/:userId')
     .get(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: 'get one'
-            })
-        }
+        getById
     )
     .patch(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: "updatedById"
-            })
-        }
+        updateById
     )
+
+
+routeUser.route('/admin/:userId')
     .delete(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: "delete",
-            })
-        }
+        deleteById
+    )
+    .patch(
+        passport.authenticate('jwt', { session: false }),
+        changeStatusById
     )
 
-
-export default routeCourse
+export default routeUser

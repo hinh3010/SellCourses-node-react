@@ -9,7 +9,7 @@ import plugin from './plugins/index.plugin';
 const tableName = tableType.USER
 
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
     {
         firstName: { type: String, trim: true },
         lastName: { type: String, trim: true },
@@ -42,16 +42,20 @@ const userSchema = mongoose.Schema(
             enum: enumType.ACCOUNT_STATUS,
             default: constType.ACTIVE,
         },
+        changeStatusById: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: tableName,
+            default: null,
+        },
 
         // delete
         deletedAt: { type: Date, default: null },
-        isDelete: { type: Boolean, default: false },
         deletedById: {
             type: mongoose.Schema.Types.ObjectId,
-            // type: mongoose.SchemaTypes.ObjectId,
             ref: tableName,
             required: false,
         },
+
 
         // auth
         authGoogleID: { type: String, default: null },
@@ -85,9 +89,10 @@ userSchema.methods.isCheckPassword = function (password) {
 }
 
 // plugin
-userSchema.plugin(plugin.paginatePlugin);
 userSchema.plugin(plugin.paginatePluginV2);
 userSchema.plugin(plugin.jsonPlugin);
+userSchema.plugin(plugin.privatesPlugin);
+userSchema.plugin(plugin.aggregatePaginatePlugin);
 
 // filter & search
 userSchema.index({ email: 'text', firstName: 'text', lastName: 'text', phone: 'text' }, { name: 'search' });
