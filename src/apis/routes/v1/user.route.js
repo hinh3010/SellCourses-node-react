@@ -22,14 +22,6 @@ routeUser.route('/')
         passport.authenticate('jwt', { session: false }),
         getAll
     )
-    .post(
-        passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: 'createed'
-            })
-        }
-    )
 
 routeUser.route('/:userId')
     .get(

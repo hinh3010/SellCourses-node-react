@@ -8,7 +8,9 @@ const passport = require("passport");
 const { validateBody, validateParam, schemaValidator } = mdw
 
 const {
-    getAll
+    getAll, create,
+    getById, updateById,
+    changeStatusById, deleteById,
 } = controller.course
 
 const routeCourse = express.Router({ mergeParams: true });
@@ -22,38 +24,27 @@ routeCourse.route('/')
     )
     .post(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: 'createed'
-            })
-        }
+        create
     )
 
 routeCourse.route('/:courseId')
     .get(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: 'get one'
-            })
-        }
+        getById
     )
     .patch(
         passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: "updatedById"
-            })
-        }
-    )
-    .delete(
-        passport.authenticate('jwt', { session: false }),
-        (req, res) => {
-            res.json({
-                message: "delete",
-            })
-        }
+        updateById
     )
 
+routeCourse.route('/admin/:courseId')
+    .delete(
+        passport.authenticate('jwt', { session: false }),
+        deleteById
+    )
+    .patch(
+        passport.authenticate('jwt', { session: false }),
+        changeStatusById
+    )
 
 export default routeCourse

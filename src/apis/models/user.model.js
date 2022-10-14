@@ -95,7 +95,7 @@ userSchema.plugin(plugin.privatesPlugin);
 userSchema.plugin(plugin.aggregatePaginatePlugin);
 
 // filter & search
-userSchema.index({ email: 'text', firstName: 'text', lastName: 'text', phone: 'text' }, { name: 'search' });
+userSchema.index({ email: 'text', firstName: 'text', lastName: 'text', phone: 'text', displayName: 'text' }, { name: 'search' });
 
 const User = mongoose.model(tableName, userSchema)
 

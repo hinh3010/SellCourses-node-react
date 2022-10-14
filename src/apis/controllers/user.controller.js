@@ -9,7 +9,7 @@ import bcrypt from 'bcrypt';
 const getAll = catchAsync(async (req, res) => {
 
     const query = { ...req.query, isSuperAdmin: false }
-    const filters = pick(query, ['accountType', 'accountStatus', 'isSuperAdmin', 'isAdmin']);
+    const filters = pick(query, ['accountType', 'accountStatus', 'isAdmin']);
     const options = pick(query, ['sort', 'limit', 'page']);
 
     const userList = await User.paginate(
