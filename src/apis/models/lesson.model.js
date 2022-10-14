@@ -22,12 +22,17 @@ const lessonSchema = mongoose.Schema(
         videoUrl: { type: String, default: null, required: true },
 
         position: {
-            type: Number, default: 1
+            type: Number
         },
+
         price: { type: Number, default: 0 },
         averageRatings: { type: Number, default: 0 },
 
         isMember: {
+            type: Boolean,
+            default: false,
+        },
+        isDone: {
             type: Boolean,
             default: false,
         },
@@ -37,10 +42,14 @@ const lessonSchema = mongoose.Schema(
         status: { type: String, enum: enumType.COURSE_STATUS, default: constType.ACTIVE },
         cmsStatus: { type: String, enum: enumType.CMS_STATUS, default: constType.ACTIVE },
         cmsContentReport: { type: String, default: null },
+        changeCmsStatusById: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: tableType.USER,
+            default: null,
+        },
 
         // delete
         deletedAt: { type: Date, default: null },
-        isDelete: { type: Boolean, default: false },
         deletedById: {
             type: mongoose.Schema.Types.ObjectId,
             ref: tableType.USER,
@@ -67,12 +76,13 @@ const lessonSchema = mongoose.Schema(
 
 
 // plugin
-lessonSchema.plugin(plugin.paginatePlugin);
 lessonSchema.plugin(plugin.paginatePluginV2);
 lessonSchema.plugin(plugin.jsonPlugin);
+lessonSchema.plugin(plugin.privatesPlugin);
+lessonSchema.plugin(plugin.aggregatePaginatePlugin);
 
 // filter & search
-lessonSchema.index({ name: 'text' }, { name: 'search' });
+lessonSchema.index({ name: 'text', position: 'text' }, { name: 'search' });
 
 const LessonModel = mongoose.model(tableName, lessonSchema)
 
