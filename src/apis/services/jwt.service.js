@@ -1,8 +1,7 @@
-import jwt from 'jsonwebtoken'
 import createError from 'http-errors';
-import redis from '../../redis/index';
-import Logger from '../../logger/index.js';
+import jwt from 'jsonwebtoken';
 import env from '../../config/env.config';
+import redis from '../../redis/index';
 const {
     access_token_serret, access_expiresIn, access_expires,
     refresh_token_serret, refresh_expiresIn, refresh_expires

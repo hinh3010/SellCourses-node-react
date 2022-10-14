@@ -1,4 +1,5 @@
 import express from 'express'
+import routeAd from './apis/routes/ad/index.admin.route.js'
 import routeV1 from './apis/routes/v1/index.route.js'
 import env from './config/env.config.js'
 import mongooseDbConnect from './connect/connect_mongodb.js'
@@ -26,6 +27,7 @@ app.get('/', async (req, res) => {
 
 
 app.use('/v1', routeV1)
+app.use('/admin', routeAd)
 app.use((err, req, res, next) => {
     res.json({
         status: err.status || 500,

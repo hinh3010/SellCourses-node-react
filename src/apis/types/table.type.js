@@ -7,6 +7,7 @@ const tableType = {
     LESSON: 'Lesson',
     RATING: 'Rating',
     TOKEN: 'Token',
+    ADS: 'Ads',
 }
 
 export default tableType
